@@ -19,8 +19,3 @@ jobs:
             pytest --junitxml=htmlcov/junit.xml
       - store-test-results:
           path: test-reports
-      - run:
-          name: run test-cov
-          command: |
-            . venv/bin/activate
-            pytest --cov=src
