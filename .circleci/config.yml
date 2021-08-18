@@ -12,7 +12,6 @@ jobs:
             . venv/bin/activate
             pip install pytest
             pip install pytest-cov
-            pip install -e .
       - run:
           name: run test
           command: |
