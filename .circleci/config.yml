@@ -16,6 +16,6 @@ jobs:
           name: run test
           command: |
             . venv/bin/activate
-            pytest --junitxml=htmlcov/junit.xml
+            pytest unit_test.py
       - store-test-results:
           path: test-reports
