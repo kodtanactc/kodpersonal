@@ -6,26 +6,26 @@ import shutil
 import os
 from setenv import RedisPwd
 
-### Redisî•ñ‹LÚ
+### Redisæƒ…å ±è¨˜è¼‰
 RedisHost = "redis-13849.c9.us-east-1-4.ec2.cloud.redislabs.com"  
 RedisPort = "13849"
 
-### Redis‚ÖÚ‘±
-r = redis.Redis(host=RedisHost, port=RedisPort, password=RedisPwd, db=0)
-r = redis.StrictRedis(host=RedisHost, port=RedisPort, password=RedisPwd, db=0)
+def get_redis_data():
+    ### Redisã¸æ¥ç¶š
+    r = redis.Redis(host=RedisHost, port=RedisPort, password=RedisPwd, db=0)
+    r = redis.StrictRedis(host=RedisHost, port=RedisPort, password=RedisPwd, db=0)
+    ### Redisã‹ã‚‰ãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—ã—ä¸€æ™‚ãƒ•ã‚¡ã‚¤ãƒ«ã«ãƒ‡ãƒ¼ã‚¿ã‚’å‡ºåŠ›
+    with open('result-data.txt', 'wt') as f: # File
+        res_keys = r.keys()                     # key
+        if res_keys:
+            res_mget = r.mget(res_keys)         # mget
+            for key, val in zip(res_keys, res_mget):
+                print(val, file=f)
 
-### Redis‚©‚çƒf[ƒ^‚ğæ“¾‚µˆêƒtƒ@ƒCƒ‹‚Éƒf[ƒ^‚ğo—Í
-with open('result-data.txt', 'wt') as f: # File
-    res_keys = r.keys()                     # key
-    if res_keys:
-        res_mget = r.mget(res_keys)         # mget
-        for key, val in zip(res_keys, res_mget):
-            print(val, file=f)
-
-### •Ï”‚ğƒŠƒZƒbƒg
+### å¤‰æ•°ã‚’ãƒªã‚»ãƒƒãƒˆ
 ncount = 0
 
-### æ“¾‚µ‚½ƒf[ƒ^‚ğ®Œ`‚µAˆê’è‹——£ˆÈ‰º‚¾‚Á‚½ŠúŠÔ‚ğ‡Œv‚·‚éB
+### å–å¾—ã—ãŸãƒ‡ãƒ¼ã‚¿ã‚’æ•´å½¢ã—ã€ä¸€å®šè·é›¢ä»¥ä¸‹ã ã£ãŸæœŸé–“ã‚’åˆè¨ˆã™ã‚‹ã€‚
 f = open('result-data.txt', 'r')
 line = f.readline()
 while line:
@@ -39,22 +39,22 @@ while line:
     line = f.readline()
 f.close()
 
-### WebƒTƒCƒg—pƒtƒ@ƒCƒ‹/•ÏŠ·‘Oƒtƒ@ƒCƒ‹‚ğw’è
+### Webã‚µã‚¤ãƒˆç”¨ãƒ•ã‚¡ã‚¤ãƒ«/å¤‰æ›å‰ãƒ•ã‚¡ã‚¤ãƒ«ã‚’æŒ‡å®š
 path1 = "C:\\temp\\p4p\\project\\mysite\\defaultpage.txt"
 path2 = "C:\\temp\\p4p\\project\\mysite\\index.html"
 
-### WebƒTƒCƒg—pƒtƒ@ƒCƒ‹‚ğ•ÏŠ·‘Oƒtƒ@ƒCƒ‹‚ÉƒŠƒZƒbƒg
+### Webã‚µã‚¤ãƒˆç”¨ãƒ•ã‚¡ã‚¤ãƒ«ã‚’å¤‰æ›å‰ãƒ•ã‚¡ã‚¤ãƒ«ã«ãƒªã‚»ãƒƒãƒˆ
 shutil.copy(path1,path2)
 
-### WebƒTƒCƒg—pƒtƒ@ƒCƒ‹‚ÉŠúŠÔ‚ğ‹LÚAŠúŠÔ‚É‚æ‚Á‚ÄƒƒbƒZ[ƒW‚ğ•ÏX
+### Webã‚µã‚¤ãƒˆç”¨ãƒ•ã‚¡ã‚¤ãƒ«ã«æœŸé–“ã‚’è¨˜è¼‰ã€æœŸé–“ã«ã‚ˆã£ã¦ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’å¤‰æ›´
 with open("C:\\temp\\p4p\\project\\mysite\\index.html", "r",encoding='UTF-8') as f2:
     filedata = f2.read()
     filedata=filedata.replace("XXX", str(ncount))
-    filedata=filedata.replace("MMMMM","X—§‚¿ã‚ª‚Á‚ÄƒXƒgƒŒƒbƒ`‚µ‚Ü‚µ‚å‚¤B")
+    filedata=filedata.replace("MMMMM","æ™‚ã€…ç«‹ã¡ä¸ŠãŒã£ã¦ã‚¹ãƒˆãƒ¬ãƒƒãƒã—ã¾ã—ã‚‡ã†ã€‚")
 with open(r"C:\\temp\\p4p\\project\\mysite\\index.html","w",encoding='UTF-8') as f3:
     f3.write(filedata)
 
-### heroku‚ğƒAƒbƒvƒf[ƒg
+### herokuã‚’ã‚¢ãƒƒãƒ—ãƒ‡ãƒ¼ãƒˆ
 os.chdir('mysite')
 os.system('git add .')
 os.system('git commit -m "auto"')
