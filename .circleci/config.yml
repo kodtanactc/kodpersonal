@@ -16,6 +16,7 @@ jobs:
           command: |
             . venv/bin/activate
             ls /home/circleci/project/
+            pylint get-data.py
             pylint setup.py
             pylint setenv.py
       - store-test-results:
