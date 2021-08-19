@@ -4,28 +4,29 @@
 import redis
 import shutil
 import os
+import datetime
 from setenv import RedisPwd
 
-### Redis情報記載
+### Redis info
 RedisHost = "redis-13849.c9.us-east-1-4.ec2.cloud.redislabs.com"  
 RedisPort = "13849"
 
-def get_redis_data():
-    ### Redisへ接続
-    r = redis.Redis(host=RedisHost, port=RedisPort, password=RedisPwd, db=0)
-    r = redis.StrictRedis(host=RedisHost, port=RedisPort, password=RedisPwd, db=0)
-    ### Redisからデータを取得し一時ファイルにデータを出力
-    with open('result-data.txt', 'wt') as f: # File
-        res_keys = r.keys()                     # key
-        if res_keys:
-            res_mget = r.mget(res_keys)         # mget
-            for key, val in zip(res_keys, res_mget):
-                print(val, file=f)
+### Redis connect
+r = redis.Redis(host=RedisHost, port=RedisPort, password=RedisPwd, db=0)
+r = redis.StrictRedis(host=RedisHost, port=RedisPort, password=RedisPwd, db=0)
 
-### 変数をリセット
+### Redis data get
+with open('result-data.txt', 'wt') as f: # File
+    res_keys = r.keys()                     # key
+    if res_keys:
+        res_mget = r.mget(res_keys)         # mget
+        for key, val in zip(res_keys, res_mget):
+            print(val, file=f)
+
+### reset vars
 ncount = 0
 
-### 取得したデータを整形し、一定距離以下だった期間を合計する。
+### format data
 f = open('result-data.txt', 'r')
 line = f.readline()
 while line:
@@ -34,27 +35,32 @@ while line:
     rline2 = rline.replace('b', '')
     rline3 = rline2.replace('\n', '')
     fline = float(rline3)
-    if fline < 0.3:
+    if fline < 0.6:
         ncount += 1
     line = f.readline()
 f.close()
 
-### Webサイト用ファイル/変換前ファイルを指定
+### set website file
 path1 = "C:\\temp\\p4p\\project\\mysite\\defaultpage.txt"
 path2 = "C:\\temp\\p4p\\project\\mysite\\index.html"
 
-### Webサイト用ファイルを変換前ファイルにリセット
+### reset website file 
 shutil.copy(path1,path2)
+ncount = ncount*10
+sitcount = datetime.timedelta(seconds=ncount)
 
-### Webサイト用ファイルに期間を記載、期間によってメッセージを変更
+### update website file
 with open("C:\\temp\\p4p\\project\\mysite\\index.html", "r",encoding='UTF-8') as f2:
     filedata = f2.read()
-    filedata=filedata.replace("XXX", str(ncount))
-    filedata=filedata.replace("MMMMM","時々立ち上がってストレッチしましょう。")
+    filedata=filedata.replace("XXX", str(sitcount))
+    if ncount < 18000:
+        filedata=filedata.replace("MMMMM","���X�����オ���ăX�g���b�`���܂��傤�B")
+    else:
+        filedata=filedata.replace("MMMMM","�����ԍ����Ă��邽�ߋC��t���܂��傤�B")
 with open(r"C:\\temp\\p4p\\project\\mysite\\index.html","w",encoding='UTF-8') as f3:
     f3.write(filedata)
 
-### herokuをアップデート
+### update heroku
 os.chdir('mysite')
 os.system('git add .')
 os.system('git commit -m "auto"')

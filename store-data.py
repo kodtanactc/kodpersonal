@@ -11,12 +11,12 @@ BrokerAddress = "test.mosquitto.org"    # Cloud MQTT
 MqttTopic = "p4p"
 
 
-######  Redisキー値のリセット  ######
+######  Redis key reset  ######
 
 RedisKey = 0
 
 
-######  RedisHostの情報を記載   ######
+######  RedisHost info   ######
 
 RedisHost = "redis-13849.c9.us-east-1-4.ec2.cloud.redislabs.com"  
 RedisPort = "13849"
@@ -37,7 +37,7 @@ def check_db():
     print("RedisKey:" + RedisKey + " KeyValue:" + msg)
     return ret
 
-### Redisへのデータ登録＋連番付与
+### Redis data and number set 
 def set_db(msg):                            ### set data to Redis
     r = redis.Redis(host=RedisHost, port=RedisPort, password=RedisPwd, db=0)
     global RedisKey
@@ -53,7 +53,7 @@ def on_message(client, userdata, message):  ### callback when get message from M
 
 ######  Main   #######
 
-### 接続確認
+### check
 ret = check_db()
 if ret is None:                             # for debug                 
     print("***** debug *****")
