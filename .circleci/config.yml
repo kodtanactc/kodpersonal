@@ -15,7 +15,7 @@ jobs:
           name: run test
           command: |
             . venv/bin/activate
-            pylint store-data.py
-            pylint get-data.py
+            pylint setup.py
+            pylint setenv.py
       - store-test-results:
           path: test-reports
